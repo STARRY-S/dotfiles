@@ -7,7 +7,18 @@ return {
                 styles = {
                     comments = "italic",
                     functions = "bold",
-                  },
+                },
+                colors = {
+                    purple = "#ababab",
+                },
+                highlights = {
+                    LiteralTabError = { bg = "#753e3e" },
+                    NvimTreeFolderIcon = { fg = blue },
+                    NvimTreeFolderName = { fg = blue },
+                    NvimTreeRootFolder = { fg = blue },
+                    NvimTreeOpenedFolderName = { fg = blue },
+                    NvimTreeCursorLine = { bg = "#2c323c" },
+                },
             })
             vim.cmd("colorscheme onedark_vivid")
         end,
@@ -18,7 +29,7 @@ return {
         config = function()
             require("lualine").setup({
                 options = {
-                    theme = 'auto',
+                    theme = 'ayu',
                     component_separators = { left = '', right = ''},
                     section_separators = { left = '', right = ''},
                     globalstatus = true,

@@ -13,8 +13,8 @@ vim.opt.termguicolors = true
 
 vim.opt.list = true
 vim.opt.listchars = {
-    space = "·",
+    -- space = "·",
     tab = "› ",
-    trail = "·",
+    -- trail = "·",
     -- eol = "↲",
 }

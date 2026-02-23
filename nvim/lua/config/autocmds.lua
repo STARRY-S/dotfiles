@@ -5,7 +5,6 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.colorcolumn = "50,72"
     end,
 })
-vim.api.nvim_set_hl(0, "ColorColumn", { bg = "#232323" })
 
 vim.api.nvim_set_hl(0, 'TrailingWhitespace', { bg='#753e3e' })
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -29,34 +28,12 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     end,
 })
 
--- =========================================
--- Custom Highlight for Listchars (Tabs & Spaces)
--- =========================================
-local function set_listchar_colors()
-    local invisible_char_color = "#333333"
-    -- 'Whitespace' controls tab, space, lead, and trail characters
-    vim.api.nvim_set_hl(0, "Whitespace", { fg = invisible_char_color })
-    -- 'NonText' controls eol, extends, and precedes characters
-    -- vim.api.nvim_set_hl(0, "NonText", { fg = invisible_char_color })
-    -- 'SpecialKey' is sometimes used as a fallback by certain themes
-    vim.api.nvim_set_hl(0, "SpecialKey", { fg = invisible_char_color })
-end
-
--- Execute immediately on startup (fixes the lazy.nvim race condition)
--- set_listchar_colors()
-
--- Bind to ColorScheme event (in case you change themes dynamically later)
-vim.api.nvim_create_autocmd("ColorScheme", {
-    pattern = "*",
-    callback = set_listchar_colors,
-})
-
 -- =============================================
 -- Configure indentation rules for Lua files
 -- Enforce spaces and highlight literal tabs as errors
 -- =============================================
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = "lua",
+    pattern = { "sh", "zshrc", "md", "py", "js", "html", "lua" },
     callback = function()
         -- Use spaces instead of literal tabs
         vim.opt_local.expandtab = true
@@ -64,8 +41,7 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.tabstop = 4
         vim.opt_local.softtabstop = 4
 
-        -- Highlight literal tab characters with red background
-        vim.fn.matchadd("ErrorMsg", "\\t")
+        vim.cmd([[syntax match LiteralTabError /\t/]])
     end,
 })
 
@@ -74,7 +50,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Ensure expandtab is strictly disabled
 -- =============================================
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "go", "gomod" },
+    pattern = { "c", "go", "gomod", "makefile" },
     callback = function()
         -- Use literal tabs instead of spaces
         vim.opt_local.expandtab = false
