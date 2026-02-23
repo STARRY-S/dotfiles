@@ -1,5 +1,9 @@
 ## My Personal Dotfiles
 
+### Preview
+
+![](images/nvim.png)
+
 ### Installation
 
 Clone the repository and run the installation script.
