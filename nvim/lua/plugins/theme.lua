@@ -3,21 +3,24 @@ return {
         "olimorris/onedarkpro.nvim",
         priority = 1000,
         config = function()
+            local light_blue = "#5cc9ff"
             require("onedarkpro").setup({
                 styles = {
                     comments = "italic",
                     functions = "bold",
                 },
                 colors = {
-                    purple = "#ababab",
+                    -- adjust purple color
+                    -- purple = "#85a3ff",
                 },
                 highlights = {
                     LiteralTabError = { bg = "#753e3e" },
-                    NvimTreeFolderIcon = { fg = blue },
-                    NvimTreeFolderName = { fg = blue },
-                    NvimTreeRootFolder = { fg = blue },
-                    NvimTreeOpenedFolderName = { fg = blue },
+                    NvimTreeFolderIcon = { fg = light_blue },
+                    NvimTreeFolderName = { fg = light_blue },
+                    NvimTreeRootFolder = { fg = light_blue },
+                    NvimTreeOpenedFolderName = { fg = light_blue },
                     NvimTreeCursorLine = { bg = "#2c323c" },
+                    TermCursor = { fg = "NONE", bg = "#aaaaaa" },
                 },
             })
             vim.cmd("colorscheme onedark_vivid")
