@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Cache OS information for performance
-readonly OS_NAME="$(uname)"
+local OS_NAME="$(uname)"
 
 # Set zsh plugin path.
 local ZSH_PLUGIN_PATH=""
@@ -230,18 +230,16 @@ alias dfh='df -h'
 alias duh='du -h'
 
 # HTTP_PROXY variable short name.
-if [[ -n "${HTTP_PROXY_ADDR}" && -n "${HTTP_PROXY_PORT}" ]]; then
-    alias proxyenv="http_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" https_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" ftp_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" rsync_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" no_proxy=\"${NO_PROXY_LIST}\""
+alias proxyenv="http_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" https_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" ftp_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" rsync_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" no_proxy=\"${NO_PROXY_LIST}\""
 
-    # Add `proxyenv` via hit `Esc` twice.
-    function add_proxyenv() {
-        [[ -z ${BUFFER} ]] && zle up-history
-        [[ ${BUFFER} != "proxyenv "* ]] && BUFFER="proxyenv ${BUFFER}"
-        zle end-of-line
-    }
-    zle -N add_proxyenv
-    bindkey "\e\e" add_proxyenv
-fi
+# Add `proxyenv` via hit `Esc` twice.
+function add_proxyenv() {
+    [[ -z ${BUFFER} ]] && zle up-history
+    [[ ${BUFFER} != "proxyenv "* ]] && BUFFER="proxyenv ${BUFFER}"
+    zle end-of-line
+}
+zle -N add_proxyenv
+bindkey "\e\e" add_proxyenv
 
 # A beautiful git log.
 # Check if git alias is already set to avoid repeated writes to config.
@@ -370,9 +368,9 @@ if [[ "${OS_NAME}" == "Darwin" ]]; then
     fi
 fi
 
-# Add `bin` folder in HOME to path.
-if [[ -d "${HOME}/bin" ]]; then
-    export PATH="${HOME}/bin:${PATH}"
+# Add `~/.local/bin` folder in HOME to path.
+if [[ -d "${HOME}/.local/bin" ]]; then
+    export PATH="${PATH}:${HOME}/.local/bin"
 fi
 
 # Load GPG_TTY
@@ -385,14 +383,6 @@ fi
 # Color man page
 export MANPAGER="less -R --use-color -Dd+r -Du+b"
 export MANROFFOPT="-P -c"
-
-# Auto create `.zshrc.local` custom env file and load it.
-if [[ -f "${HOME}/.zshrc.local" ]]; then
-    source "${HOME}/.zshrc.local"
-else
-    echo "#!/bin/zsh" > "${HOME}/.zshrc.local"
-    echo >> "${HOME}/.zshrc.local"
-fi
 
 if [[ -f "${HOME}/.alias" ]]; then
     source "${HOME}/.alias"
@@ -426,6 +416,14 @@ if type podman &> /dev/null; then
     alias ppsa="podman ps -a"
     alias pk="podman kill"
     alias prm="podman rm"
+fi
+
+# Auto create `.zshrc.local` custom env file and load it.
+if [[ -f "${HOME}/.zshrc.local" ]]; then
+    source "${HOME}/.zshrc.local"
+else
+    echo "#!/bin/zsh" > "${HOME}/.zshrc.local"
+    echo >> "${HOME}/.zshrc.local"
 fi
 
 ################################################################################

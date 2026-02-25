@@ -46,11 +46,11 @@ if [ ! -e "nvim/config/custom.lua" ]; then
 fi
 link_config "nvim" "${HOME}/.config/nvim"
 
-link_config "ssh" "${HOME}/.ssh/config"
+link_config "ssh/config" "${HOME}/.ssh/config"
 
 link_config "starship/starship.toml" "${HOME}/.config/starship.toml"
 
-if [ ! -e "zsh/.zcustom.zsh" ]; then
+if [ ! -e "zsh/.zshrc.local" ]; then
     cp "zsh/.zshrc.local.example" "zsh/.zshrc.local"
 fi
 link_config "zsh/.zshrc" "${HOME}/.zshrc"
