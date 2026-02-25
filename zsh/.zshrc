@@ -289,11 +289,11 @@ if [[ "${OS_NAME}" == "Linux" ]]; then
     # Settings for golang.
     if command -v go &> /dev/null; then
         if [[ -d "/usr/local/go" ]]; then
-            export PATH="$PATH:/usr/local/go/bin"
+            export PATH="/usr/local/go/bin:${PATH}"
         fi
         if [[ -d "${HOME}/go" ]]; then
             export GOPATH="${HOME}/go"
-            export PATH="${PATH}:${GOPATH}/bin"
+            export PATH="${GOPATH}/bin:${PATH}"
         fi
     fi
 
