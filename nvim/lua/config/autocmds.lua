@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 -- Enforce spaces and highlight literal tabs as errors
 -- =============================================
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "sh", "zshrc", "md", "py", "js", "html", "lua" },
+    pattern = { "sh", "zsh", "markdown", "py", "js", "html", "lua" },
     callback = function()
         -- Use spaces instead of literal tabs
         vim.opt_local.expandtab = true

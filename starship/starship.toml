@@ -3,10 +3,6 @@
 # Do not print a new line at the start of the prompt.
 add_newline = false
 
-# ==========================================
-# Left Prompt Configuration
-# Structure: [User@Host:Dir:Git:Jobs:Status] Char
-# ==========================================
 format = """
 [\\[](white)\
 $username\
@@ -14,38 +10,31 @@ $hostname\
 $directory\
 $git_branch\
 $git_status\
-${custom.git_dirty}\
 $jobs\
 $status\
 [\\]](white) \
 $character"""
 
-# ==========================================
-# Right Prompt Configuration
-# Structure: [Battery:OS:Time]
-# ==========================================
 right_format = """
 [\\[](white)\
 $battery\
-${custom.os_name}\
+$os\
 $time\
 [\\]](white)"""
 
-# --- Username ---
 [username]
-style_user = "red"
-style_root = "red"
+style_user = "cyan"
+style_root = "bold red"
 format = "[$user]($style)"
 show_always = true
 
-# --- Hostname ---
 [hostname]
 ssh_only = false
 style = "cyan"
-format = "@[$hostname]($style)"
+format = "@[$hostname]($style)[$ssh_symbol](bold green)"
+ssh_symbol = ":SSH"
 trim_at = "."
 
-# --- Directory ---
 [directory]
 style = "yellow"
 format = ":[$path]($style)"
@@ -55,83 +44,56 @@ truncation_length = 0
 truncate_to_repo = false
 read_only = " 🔒"
 
-# --- Git Branch ---
-# Matches original Zsh: :%F{blue}branch%f
 [git_branch]
 symbol = ""
 style = "blue"
 format = ":[$branch]($style)"
 
-# --- Git Status ---
 [git_status]
-style = "yellow"
-format = "([$ahead_behind]($style))"
+style = "bold red"
+format = "([$all_status]($style))"
 ahead = "⇡"
 behind = "⇣"
 diverged = "⇕"
-# Set these to empty just in case, though removing $all_status hides them.
-modified = ""
-untracked = ""
-staged = ""
-renamed = ""
-deleted = ""
+modified = "!"
+untracked = "?"
+staged = "+"
+renamed = "»"
+deleted = "✘"
 
-# Custom Module for the "Single Dirty Symbol"
-# This runs a quick git check. If there is ANY change, it outputs "Dirty".
-[custom.git_dirty]
-# The command checks if git status has output.
-# If yes (dirty), it echoes your desired symbol/text.
-# You can change "Dirty ✘" to just "!" or "⚡" if you prefer.
-command = "git status --porcelain --ignore-submodules -unormal 2>/dev/null | grep -q . && echo 'M'"
-# Only run inside git repos
-when = "git rev-parse --is-inside-work-tree 2>/dev/null"
-# Style it Red/Bold
-style = "bold red"
-format = " [$output]($style)"
-# Optimized for performance (runs in shell)
-shell = ["bash", "--noprofile", "--norc"]
-
-# --- Background Jobs ---
 [jobs]
 symbol = "&"
 style = "green"
 format = ":[$number$symbol]($style)"
 
-# --- Exit Status ---
 [status]
 disabled = false
-style = "red"
+style = "bold red"
 format = ":[$status]($style)"
 
-# --- Prompt Character ---
 [character]
 success_symbol = "[%](white)"
 error_symbol = "[%](bold red)"
 vimcmd_symbol = "[%](bold white)"
 
-# --- Battery ---
-# Matches original Zsh: %F{green}BAT%%%f:
 [battery]
 full_symbol = ""
 charging_symbol = ""
 discharging_symbol = ""
 format = "[$percentage]($style):"
 [[battery.display]]
-threshold = 100
+threshold = 95
 style = "green"
 
-# --- OS Name (Custom Module) ---
-[custom.os_name]
-command = "uname"
-format = "[$output]($style):"
-when = "true"
-style = "yellow"
+[os]
+format = "[($name)]($style):"
+style = "bold yellow"
+disabled = false
 
-# --- Time ---
-# Matches original Zsh: %F{cyan}%D{%Y-%m-%d} %D{%H:%M:%S}%f
 [time]
 disabled = false
 style = "cyan"
 format = "[$time]($style)"
 time_format = "%Y-%m-%d %H:%M:%S"
 use_12hr = false
+
