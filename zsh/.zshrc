@@ -229,18 +229,6 @@ alias ll='ls -al'
 alias dfh='df -h'
 alias duh='du -h'
 
-# HTTP_PROXY variable short name.
-alias proxyenv="http_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" https_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" ftp_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" rsync_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" no_proxy=\"${NO_PROXY_LIST}\""
-
-# Add `proxyenv` via hit `Esc` twice.
-function add_proxyenv() {
-    [[ -z ${BUFFER} ]] && zle up-history
-    [[ ${BUFFER} != "proxyenv "* ]] && BUFFER="proxyenv ${BUFFER}"
-    zle end-of-line
-}
-zle -N add_proxyenv
-bindkey "\e\e" add_proxyenv
-
 # A beautiful git log.
 # Check if git alias is already set to avoid repeated writes to config.
 if command -v git &> /dev/null; then
@@ -309,15 +297,9 @@ if [[ "${OS_NAME}" == "Linux" ]]; then
         if [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
             export PATH="$PATH:/var/lib/rancher/rke2/bin"
         fi
-        # Optimize kubectl completion loading
         if [[ -f "/usr/bin/kubectl" ]]; then
-            local KUBE_COMPLETION="${HOME}/.zkubectl_completion"
-            if [[ ! -f "$KUBE_COMPLETION" ]] || [[ $(find "$KUBE_COMPLETION" -mtime +1 2>/dev/null) ]]; then
-                kubectl completion zsh > "$KUBE_COMPLETION" &|
-            fi
-            [[ -f "$KUBE_COMPLETION" ]] && source "$KUBE_COMPLETION"
+            source <(kubectl completion zsh)
         fi
-        source "${HOME}/.zkubectl_completion"
     fi
 
     # sbin.
@@ -425,6 +407,18 @@ else
     echo "#!/bin/zsh" > "${HOME}/.zshrc.local"
     echo >> "${HOME}/.zshrc.local"
 fi
+
+# HTTP_PROXY variable short name.
+alias proxyenv="http_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" https_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" ftp_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" rsync_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" no_proxy=\"${NO_PROXY_LIST}\""
+
+# Add `proxyenv` via hit `Esc` twice.
+function add_proxyenv() {
+    [[ -z ${BUFFER} ]] && zle up-history
+    [[ ${BUFFER} != "proxyenv "* ]] && BUFFER="proxyenv ${BUFFER}"
+    zle end-of-line
+}
+zle -N add_proxyenv
+bindkey "\e\e" add_proxyenv
 
 ################################################################################
 # Load zsh plugins in the end.
