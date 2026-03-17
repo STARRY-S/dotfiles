@@ -9,6 +9,7 @@ Host *
 Host aur.archlinux.org
     IdentityFile ~/.ssh/id_ed25519
     User aur
+    ProxyCommand nc -v -x 127.0.0.1:1808 %h %p
 
 Host github.com
     Hostname ssh.github.com

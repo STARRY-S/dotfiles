@@ -38,6 +38,11 @@ return {
                     enable = true,
                 },
 
+                -- Use shift-i to show ignored files
+                filters = {
+                    git_ignored = false,
+                },
+
                 -- Let nvim-tree watch for external file changes and auto-refresh
                 filesystem_watchers = {
                     enable = true,
