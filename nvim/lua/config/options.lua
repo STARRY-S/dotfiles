@@ -1,3 +1,6 @@
+-- Keep 3 lines of context above/below the cursor when scrolling
+vim.opt.scrolloff = 3
+
 vim.g.mapleader = " "
 
 vim.opt.number = true
