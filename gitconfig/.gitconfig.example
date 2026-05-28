@@ -5,7 +5,7 @@
 	defaultBranch = main
 
 [user]
-	signingkey = F3B5DEDF56CA907C!
+	# signingkey = F3B5DEDF56CA907C!
 	name = STARRY-S
 	email = me@starry-s.moe
 

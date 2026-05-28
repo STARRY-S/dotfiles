@@ -36,8 +36,16 @@ link_config() {
 
 echo "Starting dotfiles installation..."
 
-link_config "fontconfig" "${HOME}/.config/fontconfig"
+if [[ $(uname -s) == "Linux" ]]; then
+    link_config "fontconfig" "${HOME}/.config/fontconfig"
+fi
 
+if [ ! -e "gitconfig/.gitconfig" ]; then
+    cp "gitconfig/.gitconfig.example" "gitconfig/.gitconfig"
+fi
+if [ ! -e "gitconfig/.gitconfig-work" ]; then
+    cp "gitconfig/.gitconfig-work.example" "gitconfig/.gitconfig-work"
+fi
 link_config "gitconfig/.gitconfig" "${HOME}/.gitconfig"
 link_config "gitconfig/.gitconfig-work" "${HOME}/.gitconfig-work"
 
@@ -46,8 +54,14 @@ if [ ! -e "nvim/config/custom.lua" ]; then
 fi
 link_config "nvim" "${HOME}/.config/nvim"
 
+if [ ! -e "ssh/config" ]; then
+    cp "ssh/config.example" "ssh/config"
+fi
 link_config "ssh/config" "${HOME}/.ssh/config"
 
+if [ ! -e "starship/starship.toml" ]; then
+    cp "starship/starship.example.toml" "starship/starship.toml"
+fi
 link_config "starship/starship.toml" "${HOME}/.config/starship.toml"
 
 if [ ! -e "zsh/.zshrc.local" ]; then
