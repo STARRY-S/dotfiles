@@ -19,6 +19,96 @@ if [[ -f "${HOME}/.zprofile" ]]; then
     source "${HOME}/.zprofile"
 fi
 
+# Auto-create `.zshrc.local` if missing. Sourcing happens at the end of
+# this file (interactive) or inside the non-interactive exit branch below.
+if [[ ! -f "${HOME}/.zshrc.local" ]]; then
+    echo "#!/bin/zsh" > "${HOME}/.zshrc.local"
+    echo >> "${HOME}/.zshrc.local"
+fi
+
+# ============================================================
+# Common env for BOTH interactive and non-interactive shells.
+# Anything below the exit guard will NOT be loaded by
+# non-interactive shells (e.g. Claude Code's bash tool), so
+# PATH/EDITOR/etc. that must be visible to spawned scripts have
+# to be set here.
+# ============================================================
+
+# Settings for Linux.
+if [[ "${OS_NAME}" == "Linux" ]]; then
+    if [[ -d "/usr/local/go" ]]; then
+        export PATH="/usr/local/go/bin:${PATH}"
+    fi
+    if [[ -d "${HOME}/go" ]]; then
+        export GOPATH="${HOME}/go"
+        export PATH="${GOPATH}/bin:${PATH}"
+    fi
+    if [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
+        export PATH="${PATH}:/var/lib/rancher/rke2/bin"
+    fi
+    if [[ -d "/sbin" ]]; then
+        export PATH="${PATH}:/sbin"
+    fi
+    if [[ -z "${LD_LIBRARY_PATH}" ]]; then
+        export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
+    else
+        export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/lib:/usr/lib:/usr/local/lib
+    fi
+    if command -v nvim &> /dev/null; then
+        export EDITOR="nvim"
+    else
+        export EDITOR="vim"
+    fi
+fi
+
+# Settings for macOS.
+if [[ "${OS_NAME}" == "Darwin" ]]; then
+    # Homebrew main path.
+    if [[ -d "/opt/homebrew/bin" ]]; then
+        export PATH="${PATH}:/opt/homebrew/bin"
+    fi
+    # Golang.
+    if [[ -f "/opt/homebrew/bin/go" && -d "${HOME}/go" ]]; then
+        export GOPATH="${HOME}/go"
+        export PATH="${PATH}:${GOPATH}/bin"
+    fi
+    # VSCode CLI (`code` command).
+    if [[ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]]; then
+        export PATH="${PATH}:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+    fi
+    # GNU utils. Hardcoded paths instead of `brew --prefix` to avoid
+    # forking 3 brew processes on every shell start.
+    [[ -d "/opt/homebrew/opt/coreutils/libexec/gnubin" ]] && export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+    [[ -d "/opt/homebrew/opt/gnu-sed/libexec/gnubin" ]] && export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:${PATH}"
+    [[ -d "/opt/homebrew/opt/grep/libexec/gnubin" ]] && export PATH="/opt/homebrew/opt/grep/libexec/gnubin:${PATH}"
+    # Rancher Desktop (kubectl, docker, nerdctl, helm).
+    if [[ -d "${HOME}/.rd/bin" ]]; then
+        export PATH="${HOME}/.rd/bin:${PATH}"
+    fi
+    # Editor.
+    if [[ -f "/opt/homebrew/bin/nvim" ]]; then
+        export EDITOR="nvim"
+    else
+        export EDITOR="vim"
+    fi
+fi
+
+# ~/.local/bin (personal scripts).
+if [[ -d "${HOME}/.local/bin" ]]; then
+    export PATH="${PATH}:${HOME}/.local/bin"
+fi
+
+# Non-interactive shells: source `.zshrc.local` so spawned subprocesses
+# still inherit any custom PATH/env defined there, then exit before the
+# interactive-only setup (key bindings, compinit, plugins, prompt) below.
+# `compdef` is stubbed so completion-loading lines in `.zshrc.local`
+# (e.g. `source <(deck completion zsh)`) don't error before compinit runs.
+if [[ $- != *i* ]]; then
+    compdef() { :; }
+    source "${HOME}/.zshrc.local"
+    exit
+fi
+
 # Emacs keymap.
 bindkey -e
 # By default `Alt-h` is help.
@@ -196,11 +286,7 @@ esac
 
 # Alias.
 # Colorize ls command.
-if [[ "${OS_NAME}" != "Darwin" && -f "/bin/ls" ]]; then
-    alias ls="ls --color=auto -h"
-else
-    alias ls="ls -G -h"
-fi
+alias ls="ls --color=auto -h"
 
 # Colorize diff command.
 if command -v diff &> /dev/null; then
@@ -213,9 +299,7 @@ if [[ -f "/usr/bin/grep" ]]; then
 fi
 
 # Colorize ip command.
-if [[ -f "/usr/bin/ip" ]]; then
-    alias ip='ip --color=auto'
-fi
+alias ip='ip --color=auto'
 
 # Use nvim as vim if neovim installed.
 if command -v nvim &> /dev/null; then
@@ -271,88 +355,23 @@ if [[ -z ${ZSH_PLUGIN_PATH} ]]; then
     fi
 fi
 
-# Enviroments.
-# Settings for Linux.
+# Interactive-only OS-specific setup.
+# (PATH/EDITOR for both OSes were exported above the exit guard.)
 if [[ "${OS_NAME}" == "Linux" ]]; then
-    # Settings for golang.
-    if command -v go &> /dev/null; then
-        if [[ -d "/usr/local/go" ]]; then
-            export PATH="/usr/local/go/bin:${PATH}"
-        fi
-        if [[ -d "${HOME}/go" ]]; then
-            export GOPATH="${HOME}/go"
-            export PATH="${GOPATH}/bin:${PATH}"
-        fi
-    fi
-
-    # Set neovim to default editor.
-    if command -v nvim &> /dev/null; then
-        export EDITOR="nvim"
-    else
-        export EDITOR="vim"
-    fi
-
-    # Kubernetes.
-    if [[ -f "/usr/bin/kubectl" || -f "/usr/local/bin/kubectl" || -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
-        if [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
-            export PATH="$PATH:/var/lib/rancher/rke2/bin"
-        fi
-        if [[ -f "/usr/bin/kubectl" ]]; then
-            source <(kubectl completion zsh)
-        fi
-    fi
-
-    # sbin.
-    if [[ -d "/sbin" ]]; then
-        export PATH="$PATH:/sbin"
-    fi
-
-    # Libraries
-    if [[ -z "${LD_LIBRARY_PATH}" ]]; then
-        export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
-    else
-        export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/lib:/usr/lib:/usr/local/lib
+    # Kubernetes completion.
+    if command -v kubectl &> /dev/null || [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
+        source <(kubectl completion zsh)
     fi
 fi
 
-# Settings for macOS.
 if [[ "${OS_NAME}" == "Darwin" ]]; then
-    # Add homebrew bin folder to path.
-    if [[ -d "/opt/homebrew/bin" ]]; then
-        export PATH="${PATH}:/opt/homebrew/bin"
-    fi
-
-    #  Settings for golang.
-    if [[ -f "/opt/homebrew/bin/go" && -d "${HOME}/go" ]]; then
-        export GOPATH="${HOME}/go"
-        export PATH="${PATH}:${GOPATH}/bin"
-    fi
-
-    # Set neovim to default editor.
-    if [[ -f "/opt/homebrew/bin/nvim" ]]; then
-        export EDITOR="nvim"
-    else
-        export EDITOR="vim"
-    fi
-
-    # Kubernetes.
+    # Kubernetes completion (cached to avoid re-running on every shell start).
     if [[ -f "/opt/homebrew/bin/kubectl" || -f "/usr/local/bin/kubectl" ]]; then
-        # Optimize kubectl completion loading
         if [[ ! -f "${HOME}/.zkubectl_completion" ]]; then
             kubectl completion zsh > "${HOME}/.zkubectl_completion"
         fi
         source "${HOME}/.zkubectl_completion"
     fi
-
-    # Add VSCode bin folder to PATH.
-    if [[ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]]; then
-        export PATH="${PATH}:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-    fi
-fi
-
-# Add `~/.local/bin` folder in HOME to path.
-if [[ -d "${HOME}/.local/bin" ]]; then
-    export PATH="${PATH}:${HOME}/.local/bin"
 fi
 
 # Load GPG_TTY
@@ -398,14 +417,6 @@ if type podman &> /dev/null; then
     alias ppsa="podman ps -a"
     alias pk="podman kill"
     alias prm="podman rm"
-fi
-
-# Auto create `.zshrc.local` custom env file and load it.
-if [[ -f "${HOME}/.zshrc.local" ]]; then
-    source "${HOME}/.zshrc.local"
-else
-    echo "#!/bin/zsh" > "${HOME}/.zshrc.local"
-    echo >> "${HOME}/.zshrc.local"
 fi
 
 # HTTP_PROXY variable short name.
@@ -474,5 +485,17 @@ fi
 # --- Starship Configuration ---
 # Initialize Starship prompt
 if command -v starship &> /dev/null; then
-    eval "$(starship init zsh)"
+    # Run starship on interactive shell
+    if [[ $- == *i* ]]; then
+        eval "$(starship init zsh)"
+    else
+        PROPT="$"
+    fi
+    # eval "$(starship init zsh)"
 fi
+
+source /usr/local/scripts/init-posix.sh # Safe-chain Zsh initialization script
+
+# Load custom `.zshrc.local` last so it can use everything set up above
+# (compinit/compdef, plugins, prompt, key bindings, aliases).
+source "${HOME}/.zshrc.local"
