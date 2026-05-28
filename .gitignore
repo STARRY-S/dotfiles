@@ -1,3 +1,16 @@
+# Nvim Lua config
 nvim/lua/config/custom.lua
 nvim/lazy-lock.json
+
+# zshrc local
 zsh/.zshrc.local
+
+# starship
+starship/starship.toml
+
+# ssh config
+ssh/config
+
+# gitconfig
+gitconfig/.gitconfig
+gitconfig/.gitconfig-work
