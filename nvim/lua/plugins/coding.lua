@@ -1,3 +1,12 @@
+local treesitter_parsers = {
+    "go", "gomod", "lua", "json", "yaml", "python",
+    "markdown", "markdown_inline", "rust",
+}
+
+local treesitter_filetypes = {
+    "go", "gomod", "lua", "json", "yaml", "python", "markdown", "rust",
+}
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -26,12 +35,19 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter",
+        lazy = false,
         build = ":TSUpdate",
-        ensure_installed = {
-            "go", "gomod", "lua", "json", "yaml", "python",
-            "markdown", "markdown_inline", "rust",
-        },
-        highlight = { enable = true },
+        config = function()
+            require("nvim-treesitter").install(treesitter_parsers)
+
+            vim.api.nvim_create_autocmd("FileType", {
+                group = vim.api.nvim_create_augroup("TreeSitterStart", { clear = true }),
+                pattern = treesitter_filetypes,
+                callback = function(args)
+                    pcall(vim.treesitter.start, args.buf)
+                end,
+            })
+        end,
     },
     {
         "ray-x/go.nvim",

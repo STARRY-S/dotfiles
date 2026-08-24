@@ -1,3 +1,8 @@
+local custom_path = vim.fn.stdpath("config") .. "/lua/config/custom.lua"
+if (vim.uv or vim.loop).fs_stat(custom_path) then
+    require("config.custom")
+end
+
 require("config.options")
 require("config.keymaps")
 require("config.autocmds")
@@ -28,4 +33,3 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins")
-

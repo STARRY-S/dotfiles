@@ -14,7 +14,6 @@ return {
                     -- purple = "#85a3ff",
                 },
                 highlights = {
-                    LiteralTabError = { bg = "#753e3e" },
                     NvimTreeFolderIcon = { fg = light_blue },
                     NvimTreeFolderName = { fg = light_blue },
                     NvimTreeRootFolder = { fg = light_blue },

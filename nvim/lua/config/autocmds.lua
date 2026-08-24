@@ -6,19 +6,41 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-vim.api.nvim_set_hl(0, 'TrailingWhitespace', { bg='#753e3e' })
-vim.api.nvim_create_autocmd('BufEnter', {
-    pattern = '*',
+local function set_whitespace_highlights()
+    vim.api.nvim_set_hl(0, "TrailingWhitespace", { bg = "#753e3e" })
+    vim.api.nvim_set_hl(0, "LiteralTabError", { bg = "#753e3e" })
+end
+
+set_whitespace_highlights()
+vim.api.nvim_create_autocmd("ColorScheme", {
+    group = vim.api.nvim_create_augroup("WhitespaceHighlights", { clear = true }),
+    callback = set_whitespace_highlights,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
     command = [[
         syntax clear TrailingWhitespace |
-        syntax match TrailingWhitespace "\_s\+$"
-    ]]}
-)
+        syntax match TrailingWhitespace "\s\+$"
+    ]],
+})
+
+local preserve_trailing_whitespace = {
+    csv = true,
+    diff = true,
+    mail = true,
+    markdown = true,
+    pandoc = true,
+    quarto = true,
+    rmd = true,
+    text = true,
+    tsv = true,
+}
 
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     pattern = "*",
     callback = function()
-        if vim.bo.filetype == "markdown" then
+        if vim.bo.buftype ~= "" or preserve_trailing_whitespace[vim.bo.filetype] then
             return
         end
 
@@ -33,7 +55,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 -- Enforce spaces and highlight literal tabs as errors
 -- =============================================
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "sh", "zsh", "markdown", "py", "js", "html", "lua" },
+    pattern = { "sh", "zsh", "markdown", "python", "javascript", "html", "lua" },
     callback = function()
         -- Use spaces instead of literal tabs
         vim.opt_local.expandtab = true

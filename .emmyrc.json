@@ -1,0 +1,53 @@
+{
+  "$schema": "emmyrc-schema://schemas/emmyrc",
+
+  "runtime": {
+    "version": "LuaJIT2",
+    "requirePattern": [
+      "?.lua",
+      "?/init.lua",
+      "lua/?.lua",
+      "lua/?/init.lua",
+      "lua/?/?.lua",
+      "plugin/?.lua",
+      "ftplugin/?.lua",
+      "after/?.lua",
+      "after/?/?.lua"
+    ]
+  },
+
+  "workspace": {
+    "workspaceRoots": [
+      "nvim/lua"
+    ],
+    "library": [
+      "/opt/homebrew/share/nvim/runtime",
+      "$HOME/.local/share/nvim/lazy/LuaSnip",
+      "$HOME/.local/share/nvim/lazy/bufferline.nvim",
+      "$HOME/.local/share/nvim/lazy/cmp-buffer",
+      "$HOME/.local/share/nvim/lazy/cmp-nvim-lsp",
+      "$HOME/.local/share/nvim/lazy/cmp-path",
+      "$HOME/.local/share/nvim/lazy/cmp_luasnip",
+      "$HOME/.local/share/nvim/lazy/gitsigns.nvim",
+      "$HOME/.local/share/nvim/lazy/go.nvim",
+      "$HOME/.local/share/nvim/lazy/guihua.lua",
+      "$HOME/.local/share/nvim/lazy/indent-blankline.nvim",
+      "$HOME/.local/share/nvim/lazy/lazy.nvim",
+      "$HOME/.local/share/nvim/lazy/lualine.nvim",
+      "$HOME/.local/share/nvim/lazy/nvim-cmp",
+      "$HOME/.local/share/nvim/lazy/nvim-lspconfig",
+      "$HOME/.local/share/nvim/lazy/nvim-tree.lua",
+      "$HOME/.local/share/nvim/lazy/nvim-treesitter",
+      "$HOME/.local/share/nvim/lazy/nvim-web-devicons",
+      "$HOME/.local/share/nvim/lazy/onedarkpro.nvim",
+      "$HOME/.local/share/nvim/lazy/plenary.nvim",
+      "$HOME/.local/share/nvim/lazy/render-markdown.nvim",
+      "$HOME/.local/share/nvim/lazy/telescope.nvim",
+      "$HOME/.local/share/nvim/lazy/toggleterm.nvim",
+      "$HOME/.local/share/nvim/lazy/which-key.nvim"
+    ],
+    "ignoreDir": [
+      ".git"
+    ]
+  }
+}
