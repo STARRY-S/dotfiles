@@ -494,8 +494,6 @@ if command -v starship &> /dev/null; then
     # eval "$(starship init zsh)"
 fi
 
-source /usr/local/scripts/init-posix.sh # Safe-chain Zsh initialization script
-
 # Load custom `.zshrc.local` last so it can use everything set up above
 # (compinit/compdef, plugins, prompt, key bindings, aliases).
 source "${HOME}/.zshrc.local"

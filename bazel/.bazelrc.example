@@ -1,0 +1,2 @@
+# Keep Bazel outputs in the user cache instead of /private/var/tmp on macOS.
+startup --output_user_root=@HOME@/Library/Caches/bazel

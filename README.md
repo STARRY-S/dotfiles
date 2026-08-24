@@ -18,7 +18,9 @@ git clone https://github.com/STARRY-S/dotfiles.git && cd dotfiles
 ### Custom Configurations
 
 **For Zsh:**
-Set custom configurations for zsh in the `zsh/.zshrc.local`.
+The installer creates the live `zsh/.zshrc` from `zsh/.zshrc.example`.
+External tools can update the ignored live file without changing the tracked example.
+Set custom configurations for Zsh in `zsh/.zshrc.local`.
 
 ```bash
 # Set up local proxy environment variables
@@ -35,6 +37,10 @@ Set custom nvim options in the `nvim/lua/config/custom.lua`.
 ```lua
 local proxy = "http://127.0.0.1:8080"
 ```
+
+**For Bazel on macOS:**
+The installer creates `bazel/.bazelrc` from the tracked example file.
+It stores Bazel outputs in `~/Library/Caches/bazel`.
 
 ### License
 

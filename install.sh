@@ -40,6 +40,13 @@ if [[ $(uname -s) == "Linux" ]]; then
     link_config "fontconfig" "${HOME}/.config/fontconfig"
 fi
 
+if [[ $(uname -s) == "Darwin" ]]; then
+    if [ ! -e "bazel/.bazelrc" ]; then
+        sed "s|@HOME@|${HOME}|g" "bazel/.bazelrc.example" > "bazel/.bazelrc"
+    fi
+    link_config "bazel/.bazelrc" "${HOME}/.bazelrc"
+fi
+
 if [ ! -e "gitconfig/.gitconfig" ]; then
     cp "gitconfig/.gitconfig.example" "gitconfig/.gitconfig"
 fi
@@ -64,6 +71,9 @@ if [ ! -e "starship/starship.toml" ]; then
 fi
 link_config "starship/starship.toml" "${HOME}/.config/starship.toml"
 
+if [ ! -e "zsh/.zshrc" ]; then
+    cp "zsh/.zshrc.example" "zsh/.zshrc"
+fi
 if [ ! -e "zsh/.zshrc.local" ]; then
     cp "zsh/.zshrc.local.example" "zsh/.zshrc.local"
 fi
