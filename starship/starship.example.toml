@@ -15,12 +15,7 @@ $status\
 [\\]](white) \
 $character"""
 
-right_format = """
-[\\[](white)\
-$battery\
-$os\
-$time\
-[\\]](white)"""
+right_format = "$battery"
 
 [username]
 style_user = "cyan"
@@ -80,20 +75,7 @@ vimcmd_symbol = "[%](bold white)"
 full_symbol = ""
 charging_symbol = ""
 discharging_symbol = ""
-format = "[$percentage]($style):"
+format = "[\\[](white)[$percentage]($style)[\\]](white)"
 [[battery.display]]
 threshold = 95
 style = "green"
-
-[os]
-format = "[($name)]($style):"
-style = "bold yellow"
-disabled = false
-
-[time]
-disabled = false
-style = "cyan"
-format = "[$time]($style)"
-time_format = "%Y-%m-%d %H:%M:%S"
-use_12hr = false
-
