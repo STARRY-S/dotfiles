@@ -22,6 +22,9 @@ The installer creates the live `zsh/.zshrc` from `zsh/.zshrc.example`.
 External tools can update the ignored live file without changing the tracked example.
 Set custom configurations for Zsh in `zsh/.zshrc.local`.
 
+On Linux, Zsh uses kubectl completion registered by `compinit` when available,
+and only generates it at startup when no completion is registered.
+
 ```bash
 # Set up local proxy environment variables
 local HTTP_PROXY_ADDR="127.0.0.1"

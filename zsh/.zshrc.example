@@ -358,9 +358,11 @@ fi
 # Interactive-only OS-specific setup.
 # (PATH/EDITOR for both OSes were exported above the exit guard.)
 if [[ "${OS_NAME}" == "Linux" ]]; then
-    # Kubernetes completion.
-    if command -v kubectl &> /dev/null || [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
-        source <(kubectl completion zsh)
+    # Prefer Kubernetes completion already registered by compinit.
+    if (( ! ${+_comps[kubectl]} )); then
+        if command -v kubectl &> /dev/null || [[ -f "/var/lib/rancher/rke2/bin/kubectl" ]]; then
+            source <(kubectl completion zsh)
+        fi
     fi
 fi
 
