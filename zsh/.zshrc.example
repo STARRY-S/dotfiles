@@ -420,7 +420,7 @@ if type podman &> /dev/null; then
 fi
 
 # HTTP_PROXY variable short name.
-alias proxyenv="http_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" https_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" ftp_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" rsync_proxy=\"http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}\" no_proxy=\"${NO_PROXY_LIST}\""
+alias proxyenv='http_proxy="http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}" https_proxy="http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}" ftp_proxy="http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}" rsync_proxy="http://${HTTP_PROXY_ADDR}:${HTTP_PROXY_PORT}" no_proxy="${NO_PROXY_LIST}"'
 
 # Add `proxyenv` via hit `Esc` twice.
 function add_proxyenv() {
