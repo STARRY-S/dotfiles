@@ -45,6 +45,21 @@ local proxy = "http://127.0.0.1:8080"
 The installer creates `bazel/.bazelrc` from the tracked example file.
 It stores Bazel outputs in `~/Library/Caches/bazel`.
 
+**For xremap on Linux:**
+The installer links `xremap/config.yml` to `~/.config/xremap/config.yml` on Linux to provide macOS-style keybindings on GNOME Wayland.
+
+- `Ctrl` keeps Cocoa/Emacs cursor movement and editing in GUI applications while remaining native in terminals and Emacs.
+- `Alt` acts as `Command` for clipboard, tab, window, and application shortcuts (`Alt+Tab` and `Alt+\`` stay native).
+- `Super` acts as `Option` when held (word navigation, line movement, and `Option+Command` combos) and opens GNOME Overview when tapped.
+- For editors with integrated terminals (VS Code, Cursor, VSCodium), add the `isLinux`-guarded entries from `xremap/vscode-keybindings.jsonc` to your VS Code `keybindings.json`, since Wayland only exposes the top-level window class rather than inner editor vs. terminal focus.
+
+Validate and reload the configuration after editing:
+
+```bash
+xremap --validate-config ~/.config/xremap/config.yml
+systemctl --user restart xremap
+```
+
 ### License
 
 MIT License

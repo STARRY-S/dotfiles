@@ -1,0 +1,361 @@
+# macOS-style keybindings for Arch Linux (GNOME Wayland)
+#
+# Physical PC keyboard -> macOS modifier layout:
+#   Ctrl          -> Control (Cocoa/Emacs cursor movement in GUI; native in terminals)
+#   Alt (L/R)     -> Command (clipboard, tabs, app shortcuts; native Alt+Tab / Alt+`)
+#   Super (held)  -> Option  (word navigation, editing, Option+Command combos via F23)
+#   Super (tap)   -> GNOME Overview (Spotlight / Mission Control)
+
+# Treat held Super as an internal virtual modifier to avoid GNOME Super+* shortcut conflicts.
+virtual_modifiers:
+  - F23
+
+shared:
+  terminals: &terminals
+    - org.gnome.Console
+    - org.gnome.Terminal
+    - Gnome-terminal
+    - Alacritty
+    - alacritty
+    - kitty
+    - foot
+    - footclient
+    - com.mitchellh.ghostty
+    - ghostty
+    - org.wezfurlong.wezterm
+    - wezterm
+    - org.kde.konsole
+    - konsole
+    - tilix
+    - xfce4-terminal
+    - xterm
+
+  browsers: &browsers
+    - google-chrome
+    - Google-chrome
+    - chromium
+    - Chromium
+    - firefox
+    - Firefox
+    - org.mozilla.firefox
+    - brave-browser
+    - Brave-browser
+    - zen
+    - app.zen_browser.zen
+
+  file_managers: &file_managers
+    - org.gnome.Nautilus
+
+  code_editors: &code_editors
+    - com.microsoft.VSCode
+    - code
+    - Code
+    - code-url-handler
+    - Cursor
+    - cursor
+    - VSCodium
+    - codium
+    - Antigravity
+    - antigravity
+
+  # Applications that rely on native Ctrl bindings (terminals and Emacs).
+  native_ctrl_apps: &native_ctrl_apps
+    - org.gnome.Console
+    - org.gnome.Terminal
+    - Gnome-terminal
+    - Alacritty
+    - alacritty
+    - kitty
+    - foot
+    - footclient
+    - com.mitchellh.ghostty
+    - ghostty
+    - org.wezfurlong.wezterm
+    - wezterm
+    - org.kde.konsole
+    - konsole
+    - tilix
+    - xfce4-terminal
+    - xterm
+    - emacs
+    - Emacs
+
+  # Apps where Alt+1..9 should stay native (terminals, Emacs, and Firefox tab switching).
+  skip_cmd_digits: &skip_cmd_digits
+    - org.gnome.Console
+    - org.gnome.Terminal
+    - Gnome-terminal
+    - Alacritty
+    - alacritty
+    - kitty
+    - foot
+    - footclient
+    - com.mitchellh.ghostty
+    - ghostty
+    - org.wezfurlong.wezterm
+    - wezterm
+    - org.kde.konsole
+    - konsole
+    - tilix
+    - xfce4-terminal
+    - xterm
+    - emacs
+    - Emacs
+    - firefox
+    - Firefox
+    - org.mozilla.firefox
+
+modmap:
+  - name: Super acts as Option when held and GNOME Overview when tapped alone
+    remap:
+      Super_L:
+        held: F23
+        alone: Super_L
+        alone_timeout_millis: 200
+      Super_R:
+        held: F23
+        alone: Super_R
+        alone_timeout_millis: 200
+
+keymap:
+  - name: Global macOS system and window management shortcuts
+    exact_match: true
+    remap:
+      # Spotlight -> GNOME Overview search (overrides GNOME Alt+Space window menu)
+      Alt-Space: Super_L
+
+      # Quit / Minimize / Hide / Fullscreen / Lock Screen
+      Alt-q: Alt-F4
+      Alt-m: Super-h
+      Alt-h: Super-h
+      C-Alt-f: F11
+      C-Alt-q: Super-l
+
+      # Screenshots (evdev SysRq maps to XKB Print in GNOME Shell)
+      Alt-Shift-3: Shift-SysRq
+      Alt-Shift-4: SysRq
+      Alt-Shift-5: SysRq
+
+      # Mission Control & Spaces (GNOME Overview & Workspaces)
+      C-Up: Super_L
+      C-Left: C-Alt-Left
+      C-Right: C-Alt-Right
+      C-Shift-Left: C-Shift-Alt-Left
+      C-Shift-Right: C-Shift-Alt-Right
+      F23-PageUp: Super-PageUp
+      F23-PageDown: Super-PageDown
+      F23-Shift-PageUp: Super-Shift-PageUp
+      F23-Shift-PageDown: Super-Shift-PageDown
+      F23-Home: Super-Home
+      F23-End: Super-End
+      F23-Shift-Home: Super-Shift-Home
+      F23-Shift-End: Super-Shift-End
+
+      # Input source group switch passthrough (Ctrl+Space stays native for fcitx5)
+      F23-Space: Super-Space
+      F23-Shift-Space: Super-Shift-Space
+
+  - name: Browser-specific macOS shortcuts
+    application:
+      only: *browsers
+    exact_match: true
+    remap:
+      # Back / Forward (Command+[ and Command+])
+      Alt-LeftBrace: Alt-Left
+      Alt-RightBrace: Alt-Right
+      # History (Command+Y -> Ctrl+H)
+      Alt-y: C-h
+      # View Page Source (Option+Command+U -> Ctrl+U)
+      F23-Alt-u: C-u
+
+  - name: File manager (Nautilus) macOS Finder shortcuts
+    application:
+      only: *file_managers
+    exact_match: true
+    remap:
+      # Back / Forward / Enclosing folder
+      Alt-LeftBrace: Alt-Left
+      Alt-RightBrace: Alt-Right
+      Alt-Up: Alt-Up
+      # Toggle hidden files (Command+Shift+. -> Ctrl+H)
+      Alt-Shift-Dot: C-h
+
+  - name: macOS Command and Option shortcuts for terminals
+    application:
+      only: *terminals
+    exact_match: true
+    remap:
+      # Physical Ctrl stays untouched for zsh readline, SIGINT, tmux, and Neovim.
+      # Tab navigation (Alt+1..9 works natively in GNOME Console / Terminal)
+      Alt-Shift-LeftBrace: C-PageUp
+      Alt-Shift-RightBrace: C-PageDown
+      F23-Alt-Left: C-PageUp
+      F23-Alt-Right: C-PageDown
+
+      # Clipboard, tabs, windows, search, clear, preferences, and zoom
+      Alt-c: C-Shift-c
+      Alt-v: C-Shift-v
+      Alt-t: C-Shift-t
+      Alt-w: C-Shift-w
+      Alt-Shift-w: Alt-F4
+      Alt-n: C-Shift-n
+      Alt-f: C-Shift-f
+      Alt-k: C-l
+      Alt-Comma: C-Comma
+      Alt-Equal: C-Equal
+      Alt-Shift-Equal: C-Shift-Equal
+      Alt-Minus: C-Minus
+      Alt-0: C-0
+
+      # Command-line jump & kill (Command+Left/Right/BackSpace)
+      Alt-Left: C-a
+      Alt-Right: C-e
+      Alt-BackSpace: C-u
+
+      # Option (held Super -> F23) word navigation, deletion, and shell Meta bindings
+      F23-Left: Alt-b
+      F23-Right: Alt-f
+      F23-BackSpace: C-w
+      F23-Delete: Alt-d
+      F23-b: Alt-b
+      F23-f: Alt-f
+      F23-d: Alt-d
+      F23-h: Alt-h
+      F23-c: Alt-c
+
+  - name: Code editors (VS Code / Cursor / VSCodium) editor + integrated terminal bridge
+    application:
+      only: *code_editors
+    exact_match: true
+    remap:
+      # Route shortcuts that break or send raw escape sequences in integrated terminals
+      # to non-colliding chords handled by companion VS Code keybindings (xremap/vscode-keybindings.jsonc).
+      C-d: C-Shift-Alt-d
+      C-k: C-Shift-Alt-k
+      C-u: C-Shift-Alt-u
+      C-o: C-Shift-Alt-o
+      Alt-BackSpace: C-Shift-Alt-BackSpace
+      Alt-Delete: C-Shift-Alt-Delete
+
+  - name: macOS navigation, Option editing, and Cocoa Ctrl cursor bindings for GUI apps
+    application:
+      not: *native_ctrl_apps
+    exact_match: true
+    remap:
+      # Tab switching, DevTools, and Find & Replace
+      Alt-Shift-LeftBrace: C-PageUp
+      Alt-Shift-RightBrace: C-PageDown
+      F23-Alt-Left: C-PageUp
+      F23-Alt-Right: C-PageDown
+      F23-Alt-i: C-Shift-i
+      F23-Alt-j: C-Shift-j
+      F23-Alt-c: C-Shift-c
+      F23-Alt-f: C-h
+
+      # Explicit Shift combos for keys whose bare Alt-<key> is mapped globally
+      Alt-Shift-h: C-Shift-h
+      Alt-Shift-m: C-Shift-m
+      Alt-Shift-q: C-Shift-q
+
+      # Command + Arrow navigation and selection (line / document boundaries)
+      Alt-Left: Home
+      Alt-Right: End
+      Alt-Up: C-Home
+      Alt-Down: C-End
+      Alt-Shift-Left: Shift-Home
+      Alt-Shift-Right: Shift-End
+      Alt-Shift-Up: C-Shift-Home
+      Alt-Shift-Down: C-Shift-End
+
+      # Command + Delete (delete to beginning / end of line)
+      Alt-BackSpace: [Shift-Home, BackSpace]
+      Alt-Delete: [Shift-End, Delete]
+
+      # Option (held Super -> F23) word navigation, selection, line movement, and deletion
+      F23-Left: C-Left
+      F23-Right: C-Right
+      F23-Shift-Left: C-Shift-Left
+      F23-Shift-Right: C-Shift-Right
+      F23-Up: Alt-Up
+      F23-Down: Alt-Down
+      F23-Shift-Up: Alt-Shift-Up
+      F23-Shift-Down: Alt-Shift-Down
+      F23-BackSpace: C-BackSpace
+      F23-Delete: C-Delete
+
+      # Cocoa / Emacs Control cursor movement and selection
+      C-f: Right
+      C-b: Left
+      C-p: Up
+      C-n: Down
+      C-a: Home
+      C-e: End
+      C-Shift-f: Shift-Right
+      C-Shift-b: Shift-Left
+      C-Shift-p: Shift-Up
+      C-Shift-n: Shift-Down
+      C-Shift-a: Shift-Home
+      C-Shift-e: Shift-End
+
+      # Cocoa / Emacs Control editing
+      C-d: Delete
+      C-h: BackSpace
+      C-w: C-BackSpace
+      C-k: [Shift-End, Delete]
+      C-u: [Shift-Home, BackSpace]
+      C-o: [Enter, Left]
+
+  - name: macOS Command shortcuts for GUI apps (Shift passthrough enabled)
+    application:
+      not: *native_ctrl_apps
+    remap:
+      # Standard Command -> Ctrl shortcuts; exact_match: false allows Shift combos
+      # (e.g. Alt-Shift-z -> C-Shift-z, Alt-Shift-t -> C-Shift-t, Alt-Shift-p -> C-Shift-p).
+      Alt-a: C-a
+      Alt-b: C-b
+      Alt-c: C-c
+      Alt-d: C-d
+      Alt-e: C-e
+      Alt-f: C-f
+      Alt-g: C-g
+      Alt-i: C-i
+      Alt-j: C-j
+      Alt-k: C-k
+      Alt-l: C-l
+      Alt-n: C-n
+      Alt-o: C-o
+      Alt-p: C-p
+      Alt-r: C-r
+      Alt-s: C-s
+      Alt-t: C-t
+      Alt-u: C-u
+      Alt-v: C-v
+      Alt-w: C-w
+      Alt-x: C-x
+      Alt-y: C-y
+      Alt-z: C-z
+      Alt-0: C-0
+      Alt-Equal: C-Equal
+      Alt-Minus: C-Minus
+      Alt-Slash: C-Slash
+      Alt-Backslash: C-Backslash
+      Alt-Comma: C-Comma
+      Alt-Dot: C-Dot
+      Alt-LeftBrace: C-LeftBrace
+      Alt-RightBrace: C-RightBrace
+      Alt-Enter: C-Enter
+
+  - name: macOS Command+1..9 tab and editor group switching
+    application:
+      not: *skip_cmd_digits
+    exact_match: true
+    remap:
+      Alt-1: C-1
+      Alt-2: C-2
+      Alt-3: C-3
+      Alt-4: C-4
+      Alt-5: C-5
+      Alt-6: C-6
+      Alt-7: C-7
+      Alt-8: C-8
+      Alt-9: C-9

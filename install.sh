@@ -38,6 +38,7 @@ echo "Starting dotfiles installation..."
 
 if [[ $(uname -s) == "Linux" ]]; then
     link_config "fontconfig" "${HOME}/.config/fontconfig"
+    link_config "xremap/config.yml" "${HOME}/.config/xremap/config.yml"
 fi
 
 if [[ $(uname -s) == "Darwin" ]]; then
@@ -56,7 +57,7 @@ fi
 link_config "gitconfig/.gitconfig" "${HOME}/.gitconfig"
 link_config "gitconfig/.gitconfig-work" "${HOME}/.gitconfig-work"
 
-if [ ! -e "nvim/config/custom.lua" ]; then
+if [ ! -e "nvim/lua/config/custom.lua" ]; then
     cp "nvim/lua/config/custom.example.lua" "nvim/lua/config/custom.lua"
 fi
 link_config "nvim" "${HOME}/.config/nvim"

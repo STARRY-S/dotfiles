@@ -1,0 +1,115 @@
+// Companion VS Code keybindings for xremap/config.yml on Linux.
+// All entries are guarded with `isLinux` so VS Code Settings Sync will not affect macOS.
+[
+    // Integrated terminal: Command+C/V/K/A (remapped by xremap to Ctrl+C/V/K/A)
+    {
+        "key": "ctrl+c",
+        "command": "workbench.action.terminal.copyAndClearSelection",
+        "when": "isLinux && terminalFocus && terminalTextSelected"
+    },
+    {
+        "key": "ctrl+v",
+        "command": "workbench.action.terminal.paste",
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.terminal.clear",
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+a",
+        "command": "workbench.action.terminal.selectAll",
+        "when": "isLinux && terminalFocus"
+    },
+    // Integrated terminal: Option+Left/Right/BackSpace/Delete & Ctrl+W
+    {
+        "key": "ctrl+left",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001bb" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+right",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u001bf" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+backspace",
+        "command": "workbench.action.terminal.deleteWordLeft",
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+delete",
+        "command": "workbench.action.terminal.deleteWordRight",
+        "when": "isLinux && terminalFocus"
+    },
+    // Integrated terminal bridge chords from xremap (Ctrl+D/K/U/O and Command+BackSpace/Delete)
+    {
+        "key": "ctrl+shift+alt+d",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u0004" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+k",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u000b" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+u",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u0015" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+o",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u000f" },
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+backspace",
+        "command": "workbench.action.terminal.deleteToLineStart",
+        "when": "isLinux && terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+delete",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": { "text": "\u000b" },
+        "when": "isLinux && terminalFocus"
+    },
+    // Editor & Monaco inputs bridge chords from xremap (Ctrl+D/K/U/O and Command+BackSpace/Delete)
+    {
+        "key": "ctrl+shift+alt+d",
+        "command": "deleteRight",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+k",
+        "command": "deleteAllRight",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+u",
+        "command": "deleteAllLeft",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+o",
+        "command": "lineBreakInsert",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+backspace",
+        "command": "deleteAllLeft",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+alt+delete",
+        "command": "deleteAllRight",
+        "when": "isLinux && textInputFocus && !terminalFocus"
+    }
+]
